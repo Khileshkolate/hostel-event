@@ -519,6 +519,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import HomePage from './LandingPage/HomePage';
+import GaneshChaturthiPage from './Components/GaneshChaturthiPage';
+import AdminDashboard from './Components/AdminDashboard';
 
 function App() {
   return (
@@ -527,6 +529,9 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+           <Route path="/ganesh-chaturthi" element={<GaneshChaturthiPage />} />
+           <Route path="/admin-dashbaord" element={<AdminDashboard />} />
+           
           {/* Add more routes here as needed */}
         </Routes>
         <Footer />

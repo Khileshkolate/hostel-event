@@ -41,7 +41,7 @@ const HomePage = () => {
         time: "5:00 PM",
         location: "Civil Ground Vollyball Court",
         description: "Friendly competition with various games and prizes for winners!",
-        image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Z2FtaW5nJTIwdG91cm5hbWVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80"
+        image: "/videos/img4.jpg"
       },
       {
         id: 5,
@@ -54,12 +54,12 @@ const HomePage = () => {
       },
       {
         id: 6,
-        title: "Hostel Batminton League [HBL]",
+        title: "Hostel Football League [HFL]",
         date: "2023-07-15T14:00:00",
         time: "2:00 PM",
         location: "Activity Room",
         description: "Learn new skills from photography to coding in our weekend workshops.",
-        image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d29ya3Nob3B8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=600&q=80"
+        image: "/videos/img1.jpg"
       }
     ];
     setEvents(sampleEvents);
@@ -336,3 +336,8 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+
+
+

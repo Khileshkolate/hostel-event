@@ -1,9 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const EventCard = ({ event }) => {
+  const navigate = useNavigate();
   const eventDate = new Date(event.date);
   const day = eventDate.getDate();
   const month = eventDate.toLocaleString('default', { month: 'short' });
+
+  const handleClick = () => {
+    if (event.id === 1) { // Ganesh Chaturthi event
+      navigate('/ganesh-chaturthi');
+    } else {
+      // For other events, you can implement different navigation or modals
+      alert(`More information about ${event.title} would be shown here.`);
+    }
+  };
 
   return (
     <div className="event-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
@@ -27,12 +38,12 @@ const EventCard = ({ event }) => {
         <h3 className="text-xl font-bold text-gray-800 mb-3">{event.title}</h3>
         <p className="event-description text-gray-600 mb-5 leading-relaxed">{event.description}</p>
         <div className="event-actions flex gap-3">
-          <button className="event-button primary py-2 px-5 bg-gradient-to-r from-blue-500 to-red-500 text-white border-none rounded-full font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md flex-1">
+          <button 
+            className="event-button primary py-2 px-5 bg-gradient-to-r from-blue-500 to-red-500 text-white border-none rounded-full font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md flex-1"
+            onClick={handleClick}
+          >
             More Info
           </button>
-          {/* <button className="event-button secondary py-2 px-5 bg-transparent text-blue-500 border-2 border-blue-500 rounded-full font-semibold cursor-pointer transition-all duration-300 hover:bg-blue-500 hover:text-white flex-1">
-            More Info
-          </button> */}
         </div>
       </div>
     </div>
