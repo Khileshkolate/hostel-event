@@ -530,7 +530,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
            <Route path="/ganesh-chaturthi" element={<GaneshChaturthiPage />} />
-           <Route path="/admin-dashbaord" element={<AdminDashboard />} />
+           <Route path="/admin-dashboard" element={<AdminDashboard />} />
            
           {/* Add more routes here as needed */}
         </Routes>
