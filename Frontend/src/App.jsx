@@ -521,6 +521,7 @@ import Footer from './Components/Footer';
 import HomePage from './LandingPage/HomePage';
 import GaneshChaturthiPage from './Components/GaneshChaturthiPage';
 import AdminDashboard from './Components/AdminDashboard';
+import AdminLogin from './AdminLogin/AdminLogin';
 
 function App() {
   return (
@@ -530,7 +531,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
            <Route path="/ganesh-chaturthi" element={<GaneshChaturthiPage />} />
+             <Route path='/admin-login' element={<AdminLogin/>}></Route>
            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+         
            
           {/* Add more routes here as needed */}
         </Routes>
