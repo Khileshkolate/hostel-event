@@ -1,17 +1,21 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose();
+const {Schema} = mongoose;
 
 const studentSchema = new Schema({
     name: String,
     enrollment: String,
     phone: String,
     email: String,
-    receipt: String,
+    receipt: {
+        url:String,
+        filename:String
+    },
     year: {
         type: Number,
         min:1,
         max:4
     },
+    event:String,
     amount: Number
 });
 

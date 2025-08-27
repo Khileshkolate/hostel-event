@@ -6,6 +6,8 @@ require("dotenv").config();
 const mongo_url = process.env.MONGO_URL;
 const userModel = require("./Models/userModel");
 const userRoutes = require("./Routes/user.routes");
+const receiptRoutes = require("./Routes/receipt.routes");
+const eventRoutes = require("./Routes/events.routes");
 const cors = require("cors");
 app.use(express.json());
 app.use(cors());
@@ -15,7 +17,8 @@ app.get("/",async(req,res)=>{
 })
 
 app.use("/user",userRoutes);
-
+app.use("/receipt",receiptRoutes);
+app.use("/event",eventRoutes);
 
 const main = async()=>{
     console.log("connecting to database");
