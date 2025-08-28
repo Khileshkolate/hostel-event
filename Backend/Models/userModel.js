@@ -14,6 +14,12 @@ const userSchema = mongoose.Schema({
         default:"user",
         enums:["user","admin","volunteer"]
     },
+    event:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Event"
+        }
+    ],
     email:String,
     phone: String,
     token: String

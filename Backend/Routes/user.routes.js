@@ -3,7 +3,7 @@ const router = express.Router();
 const userModel = require("../Models/userModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const generateToken = require("../Utils/generateToken");
+const {generateToken} = require("../Utils/tokenManager");
 const {createHash, compareHash} = require("../Utils/bcryptOprations");
 // Get all users
 router.get("/",async(req,res)=>{
