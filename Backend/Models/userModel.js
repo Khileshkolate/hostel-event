@@ -9,9 +9,14 @@ const userSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Event"
     }],
-    role:String,
+    role:{
+        type:String,
+        default:"user",
+        enums:["user","admin","volunteer"]
+    },
     email:String,
     phone: String,
+    token: String
 })
 
 const userModel = mongoose.model("User",userSchema);
