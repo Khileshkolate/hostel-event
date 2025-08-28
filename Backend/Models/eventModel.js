@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose();
+const {Schema} = mongoose;
 
 const eventSchema = new Schema({
-    name: String,
+    title: String,
     date: String,
     time: String,
     location: String,
     description: String,
-    img: String,
+    image: {
+        url:String,
+        filename:String
+    },
     accoutDetail: String,
     firstYear: Number,
     secondYear: Number,
