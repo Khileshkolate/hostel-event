@@ -198,9 +198,8 @@
 
 
 
-
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';   // ✅ import navigate
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -208,7 +207,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate(); // ✅ create navigate instance
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -248,7 +247,7 @@ const Header = () => {
   ];
 
   const loginOptions = [
-    { id: 'admin', label: 'Admin', path: '/admin-login' },  // ✅ added path
+    { id: 'admin', label: 'Admin', path: '/admin-login' },
     { id: 'volunteer', label: 'Volunteer', path: '/volunteer' }
   ];
 
@@ -311,7 +310,7 @@ const Header = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         setIsLoginOpen(false);
-                        navigate(option.path);   // ✅ redirect instead of console.log
+                        navigate(option.path);
                       }}
                     >
                       <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
@@ -370,7 +369,7 @@ const Header = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       setIsMenuOpen(false);
-                      navigate(option.path);  // ✅ redirect here also
+                      navigate(option.path);
                     }}
                   >
                     <span className="w-2 h-2 bg-blue-300 rounded-full mr-3"></span>

@@ -1,65 +1,79 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Slider from '../Components/Slider';
 import EventCard from '../Components/EventCard';
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sampleEvents = [
       {
-        id: 1,
-        title: "Ganesh Chaturthi 2025",
-        date: "2025-08-27T19:00:00",
-        time: "11:00 AM",
-        location: "MP Theater",
-        description: "Join us for an evening of live music performances by talented residents!",
-        image: "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bXVzaWMlMjBldmVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80"
-      },
+  id: 1,
+  title: "Ganesh Chaturthi 2025",
+  date: "2025-08-27T19:00:00",
+  time: "11:00 AM",
+  location: "MP Theater",
+  description: "Join us for an evening of live music performances by talented residents!",
+  image: "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bXVzaWMlMjBldmVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80",
+  hasMoreInfo: true, // Added missing comma on previous line
+  moreInfoPath: "/ganesh-chaturthi"
+},
       {
         id: 2,
         title: "Saraswati Puja 2025",
-        date: "2023-06-20T18:30:00",
-        time: "6:30 PM",
+        date: "2025-01-25T18:30:00",
+        time: "9:00 AM",
         location: "MP Theater",
-        description: "Delicious grilled food and refreshing drinks. Don't miss out!",
-        image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YmJxJTIwcGFydHl8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=600&q=80"
+        description: "Celebration of the goddess of knowledge, music, art, and wisdom.",
+        image: "https://images.unsplash.com/photo-1611141569435-bf415ee0adfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2FyYXN3YXRpJTIwcHVqYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80",
+        hasMoreInfo: true,
+        moreInfoPath: "/saraswati-puja"
       },
       {
         id: 3,
-        title: "Rawan Dhahan 2025",
-        date: "2023-06-25T20:00:00",
-        time: "8:00 PM",
+        title: "Rawan Dahan 2025",
+        date: "2025-10-12T20:00:00",
+        time: "6:00 PM",
         location: "Civil Ground",
-        description: "Screening of the latest blockbuster. Free popcorn for all!",
-        image: "https://images.unsplash.com/photo-1489599102910-59206b8ca314?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bW92aWUlMjBuaWdodHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80"
+        description: "Ceremonial burning of Rawan's effigy symbolizing victory of good over evil.",
+        image: "https://images.unsplash.com/photo-1602087927578-6bc56c434c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmF3YW4lMjBkYWhhbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80",
+        hasMoreInfo: true,
+        moreInfoPath: "/rawan-dahan"
       },
       {
         id: 4,
-        title: "Hostel Vollyball League [HVL]",
-        date: "2023-07-02T15:00:00",
+        title: "Hostel Volleyball League [HVL]",
+        date: "2025-07-02T15:00:00",
         time: "5:00 PM",
-        location: "Civil Ground Vollyball Court",
+        location: "Civil Ground Volleyball Court",
         description: "Friendly competition with various games and prizes for winners!",
-        image: "/videos/img4.jpg"
+        image: "/videos/img4.jpg",
+        hasMoreInfo: true,
+        moreInfoPath: "/sports/volleyball"
       },
       {
         id: 5,
         title: "Hostel Cricket League [HCL]",
-        date: "2023-07-10T19:00:00",
+        date: "2025-07-10T19:00:00",
         time: "7:00 PM",
         location: "Main Hall",
         description: "Experience diverse cultures through performances, food, and traditions.",
-        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y3VsdHVyYWwlMjBldmVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80"
+        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y3VsdHVyYWwlMjBldmVudHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=80",
+       hasMoreInfo: true,
+        moreInfoPath: "/sports/cricket"
       },
       {
         id: 6,
         title: "Hostel Football League [HFL]",
-        date: "2023-07-15T14:00:00",
+        date: "2025-07-15T14:00:00",
         time: "2:00 PM",
         location: "Activity Room",
         description: "Learn new skills from photography to coding in our weekend workshops.",
-        image: "/videos/img1.jpg"
+        image: "/videos/img1.jpg",
+         hasMoreInfo: true,
+        moreInfoPath: "/sports/football"
       }
     ];
     setEvents(sampleEvents);
@@ -70,6 +84,10 @@ const HomePage = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleMoreInfoClick = (path) => {
+    navigate(path);
   };
 
   return (
@@ -113,7 +131,11 @@ const HomePage = () => {
           </div>
           <div className="events-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map(event => (
-              <EventCard key={event.id} event={event} />
+              <EventCard 
+                key={event.id} 
+                event={event} 
+                onMoreInfo={event.hasMoreInfo ? () => handleMoreInfoClick(event.moreInfoPath) : null}
+              />
             ))}
           </div>
           <div className="section-cta text-center mt-12">
@@ -336,8 +358,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-
-
-
-
