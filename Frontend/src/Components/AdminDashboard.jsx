@@ -810,9 +810,11 @@ const AdminDashboard = () => {
                 <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-sm">
                   <thead className="bg-gray-200">
                     <tr>
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Enrollment No</th>
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Date:</th>
                       <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Enrollment No:</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Phone No:</th>
                       <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Branch</th>
                       <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Year</th>
                     </tr>
