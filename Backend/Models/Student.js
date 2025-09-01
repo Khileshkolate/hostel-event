@@ -47,11 +47,10 @@
 
 
 
-
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
-   createdAt: {
+  createdAt: {
     type: Date,
     default: Date.now
   },
@@ -59,7 +58,7 @@ const studentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-   email: {
+  email: {
     type: String,
     required: [true, 'Email is required'],
     lowercase: true,
@@ -73,9 +72,9 @@ const studentSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function(v) {
-        return /^[0-9]{8,}$/.test(v);
+        return /^[0-9A-Z]{8,}$/.test(v);
       },
-      message: 'Enrollment number should be at least 8 digits'
+      message: 'Enrollment number should be at least 8 alphanumeric characters'
     }
   },
   name: {
@@ -84,16 +83,25 @@ const studentSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'Name cannot be more than 100 characters']
   },
- phonenumber: {
-  type: Number,
-  required: true
-
- },
+  phonenumber: {
+    type: String,
+    required: [true, 'Phone number is required'],
+    validate: {
+      validator: function(v) {
+        return /^[0-9]{10}$/.test(v);
+      },
+      message: 'Phone number should be exactly 10 digits'
+    }
+  },
   branch: {
     type: String,
     required: [true, 'Branch is required'],
     trim: true,
-    maxlength: [100, 'Branch cannot be more than 100 characters']
+    uppercase: true,
+    enum: {
+      values: ['CSE', 'ECE', 'EEE', 'ME', 'CE', 'IT'],
+      message: 'Branch must be one of: CSE, ECE, EEE, ME, CE, IT'
+    }
   },
   year: {
     type: String,
@@ -104,7 +112,6 @@ const studentSchema = new mongoose.Schema({
     },
     trim: true
   }
- 
 });
 
 // Update the updatedAt field before saving
@@ -117,6 +124,7 @@ studentSchema.pre('save', function(next) {
 studentSchema.index({ enrollmentNo: 1 });
 studentSchema.index({ email: 1 }, { unique: true });
 studentSchema.index({ year: 1 });
+studentSchema.index({ branch: 1 });
 
 // Static method to find by enrollment number
 studentSchema.statics.findByEnrollment = function(enrollmentNo) {

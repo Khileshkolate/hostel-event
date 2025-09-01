@@ -36,83 +36,47 @@
 
 
 
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const studentsRouter = require('./Routes/students');
+const uploadRoutes = require('./Routes/students');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Enhanced MongoDB connection with debugging
-const MONGODB_URI = process.env.MONGO_URL || 'mongodb://localhost:27017/HostelEvents';
-
-console.log('Attempting to connect to MongoDB...');
-console.log('Connection string:', MONGODB_URI.replace(/:[^:]*@/, ':****@')); // Hide password
-
-mongoose.connect(MONGODB_URI, {
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/HostelEvents', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-})
-.then(() => {
-  console.log('✅ MongoDB connected successfully');
-  console.log('✅ Database name:', mongoose.connection.name);
-})
-.catch((error) => {
-  console.error('❌ MongoDB connection error:', error.message);
-  console.error('❌ Error details:', error);
 });
 
-// MongoDB connection events
 mongoose.connection.on('connected', () => {
-  console.log('✅ Mongoose connected to MongoDB');
+  console.log('Connected to MongoDB');
 });
 
 mongoose.connection.on('error', (err) => {
-  console.error('❌ Mongoose connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('❌ Mongoose disconnected from MongoDB');
-});
-
-// Close connection on app termination
-process.on('SIGINT', async () => {
-  await mongoose.connection.close();
-  console.log('MongoDB connection closed due to app termination');
-  process.exit(0);
+  console.error('MongoDB connection error:', err);
 });
 
 // Routes
-app.use('/api/students', studentsRouter);
+app.use('/api/upload', uploadRoutes);
 
-// Test route to check database connection
-app.get('/api/test-db', async (req, res) => {
-  try {
-    const Student = require('./Models/Student');
-    const count = await Student.countDocuments();
-    res.json({ 
-      success: true, 
-      message: 'Database connection is working',
-      studentCount: count,
-      dbName: mongoose.connection.name
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Database connection failed',
-      error: error.message 
-    });
-  }
+// Basic route
+app.get('/', (req, res) => {
+  res.json({ message: 'Student CSV Upload API' });
 });
 
-const PORT = process.env.PORT || 5000;
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(500).json({ error: error.message });
+});
+
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
