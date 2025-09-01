@@ -9,6 +9,7 @@ const AdminSidebar = ({ activeSection, setActiveSection }) => {
     { id: 'donationAmount', label: 'Donation Settings', icon: '💰' },
     { id: 'yearlyData', label: 'Yearly Data', icon: '📈' },
     { id: 'reports', label: 'Reports', icon: '📋' },
+    { id: 'addData', label: 'Add Student Data', icon: '📥' }, // New option
   ];
 
   return (
@@ -103,6 +104,36 @@ const EventCard = ({ event, onDelete }) => (
   </div>
 );
 
+// Mock database for student data
+const mockStudentDB = {
+  students: [],
+  
+  addStudents: function(newStudents) {
+    // Filter out duplicates based on enrollmentNo
+    const uniqueStudents = newStudents.filter(newStudent => 
+      !this.students.some(existingStudent => 
+        existingStudent.enrollmentNo === newStudent.enrollmentNo
+      )
+    );
+    
+    this.students = [...this.students, ...uniqueStudents];
+    return {
+      success: true,
+      insertedCount: uniqueStudents.length,
+      duplicateCount: newStudents.length - uniqueStudents.length
+    };
+  },
+  
+  getAllStudents: function() {
+    return this.students;
+  },
+  
+  clearAll: function() {
+    this.students = [];
+    return { success: true };
+  }
+};
+
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [donationAmounts, setDonationAmounts] = useState({
@@ -151,6 +182,9 @@ const AdminDashboard = () => {
     description: '',
     image: ''
   });
+
+  const [uploadStatus, setUploadStatus] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Predefined list of events for the dropdown
   const eventOptions = [
@@ -206,6 +240,121 @@ const AdminDashboard = () => {
       setEvents(events.filter(event => event.id !== id));
       alert('Event deleted successfully!');
     }
+  };
+
+  // Handler for file upload
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check if the file is a CSV
+    if (!file.name.endsWith('.csv')) {
+      setUploadStatus({
+        type: 'error',
+        message: 'Please upload a CSV file'
+      });
+      return;
+    }
+    
+    setIsUploading(true);
+    setUploadStatus({
+      type: 'info',
+      message: 'Processing file...'
+    });
+    
+    // Simulate network delay
+    setTimeout(() => {
+      try {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const csvData = e.target.result;
+            const results = parseCSV(csvData);
+            
+            if (results.length === 0) {
+              setUploadStatus({
+                type: 'error',
+                message: 'No valid student records found in the CSV file'
+              });
+              setIsUploading(false);
+              return;
+            }
+            
+            // Save to mock database
+            const dbResult = mockStudentDB.addStudents(results);
+            
+            setUploadStatus({
+              type: 'success',
+              message: `Successfully uploaded ${dbResult.insertedCount} student records. 
+                       ${dbResult.duplicateCount > 0 ? `${dbResult.duplicateCount} duplicates were skipped.` : ''}`
+            });
+            
+            // For debugging - show the stored data
+            console.log('All students in database:', mockStudentDB.getAllStudents());
+          } catch (error) {
+            setUploadStatus({
+              type: 'error',
+              message: 'Error processing CSV file: ' + error.message
+            });
+          }
+          setIsUploading(false);
+        };
+        reader.readAsText(file);
+      } catch (error) {
+        setUploadStatus({
+          type: 'error',
+          message: 'Error reading file: ' + error.message
+        });
+        setIsUploading(false);
+      }
+    }, 1500); // Simulate network delay
+  };
+  
+  // Function to parse CSV data
+  const parseCSV = (csvData) => {
+    const lines = csvData.split('\n');
+    const results = [];
+    
+    // Detect headers
+    const headers = lines[0].split(',').map(header => header.trim());
+    
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      const values = line.split(',').map(value => value.trim());
+      
+      // Create student object
+      const student = {
+        enrollmentNo: values[0] || '',
+        name: values[1] || '',
+        email: values[2] || '',
+        branch: values[3] || '',
+        year: values[4] || ''
+      };
+      
+      // Only add if we have required fields
+      if (student.enrollmentNo && student.name && student.email) {
+        results.push(student);
+      }
+    }
+    
+    return results;
+  };
+  
+  // Function to download sample CSV
+  const downloadSampleCSV = () => {
+    const sampleData = "Enrollment No,Name,Email,Branch,Year\n20230001,John Doe,john@example.com,Computer Science,1st Year\n20230002,Jane Smith,jane@example.com,Electrical Engineering,2nd Year\n20230003,Robert Johnson,robert@example.com,Mechanical Engineering,3rd Year\n20230004,Emily Davis,emily@example.com,Civil Engineering,4th Year";
+    
+    const blob = new Blob([sampleData], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample-students.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   // Sample data for demonstration
@@ -606,6 +755,87 @@ const AdminDashboard = () => {
               <div className="bg-gray-50 rounded-xl p-6 text-center">
                 <span className="text-gray-400 text-4xl mb-2 inline-block">📄</span>
                 <p className="text-gray-500">No reports generated yet</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'addData':
+        return (
+          <div className="bg-white rounded-xl shadow-md p-6 pt-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Upload Student Data</h1>
+            <p className="text-gray-600 mb-6">Upload CSV file with student information</p>
+
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-6">
+              <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl">📤</span>
+              </div>
+              <p className="text-gray-600 mb-4">Drag & drop your CSV file here or click to browse</p>
+              <input
+                type="file"
+                id="csvFile"
+                accept=".csv"
+                className="hidden"
+                onChange={handleFileUpload}
+                disabled={isUploading}
+              />
+              <label
+                htmlFor="csvFile"
+                className={`px-4 py-2 rounded-lg cursor-pointer inline-block ${
+                  isUploading 
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                {isUploading ? 'Processing...' : 'Browse Files'}
+              </label>
+            </div>
+
+            {uploadStatus && (
+              <div className={`p-4 rounded-lg mb-6 ${
+                uploadStatus.type === 'success' 
+                  ? 'bg-green-100 text-green-800 border border-green-200' 
+                  : uploadStatus.type === 'error'
+                  ? 'bg-red-100 text-red-800 border border-red-200'
+                  : 'bg-blue-100 text-blue-800 border border-blue-200'
+              }`}>
+                {uploadStatus.message}
+              </div>
+            )}
+
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <h3 className="text-lg font-medium text-gray-800 mb-4">CSV File Format</h3>
+              <p className="text-gray-600 mb-4">Your CSV file should have the following columns:</p>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-sm">
+                  <thead className="bg-gray-200">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Enrollment No</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Branch</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Year</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-gray-700 border-t">20230001</td>
+                      <td className="px-4 py-2 text-sm text-gray-700 border-t">John Doe</td>
+                      <td className="px-4 py-2 text-sm text-gray-700 border-t">john@example.com</td>
+                      <td className="px-4 py-2 text-sm text-gray-700 border-t">Computer Science</td>
+                      <td className="px-4 py-2 text-sm text-gray-700 border-t">1st Year</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4">
+                <button 
+                  onClick={downloadSampleCSV}
+                  className="text-indigo-600 hover:text-indigo-800 flex items-center"
+                >
+                  <span className="mr-2">📄</span>
+                  Download sample CSV file
+                </button>
               </div>
             </div>
           </div>
